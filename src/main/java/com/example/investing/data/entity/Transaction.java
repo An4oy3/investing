@@ -1,19 +1,33 @@
 package com.example.investing.data.entity;
 
 import com.example.investing.data.enums.TransactionType;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * Currency used in the transaction (e.g., USD, EUR, BTC).
      */
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
     /**
      * destination Account(Sender when TransactionType = SELL, Buyer when BUY)
      */
+    @ManyToOne
+    @JoinColumn(name = "destination_account_id")
     private Account destinationAccount;
     /**
      * Balance of the destination's account after the transaction (destination account balance).
@@ -26,6 +40,7 @@ public class Transaction {
     /**
      * Type of transaction (e.g., SELL, BUY, TRANSFER, WITHDRAWAL).
      */
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     /**
      * Exchange rate with USD applied during the transaction (e.g., for currency conversion).
@@ -42,6 +57,8 @@ public class Transaction {
     /**
      * The account from which the funds were sent (source account).
      */
+    @ManyToOne
+    @JoinColumn(name = "source_account_id")
     private Account sourceAccount;
     /**
      * Balance of the source's account after the transaction (source account balance).
